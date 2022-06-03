@@ -1,105 +1,170 @@
-# 🔨🔨 Bunnings Sizzling-Hot 🔥 Products
+<div id="top"></div>
 
-[*_This is Work in progress_*]
+<h1 align="center">
+  <br> 
+  <img src="readme/logo.png" width="800" alt="Bunnings Take Home Assignment" />
+  <br>  <br>
+  Sizzling Hot Products
+  <br>
+</h1>
 
-Bunnings will be launching a new page to allow customers to see the list of
-sizzling-hot products. We want you to write the business logic to determine
-which products to display
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#brief">Brief</a>
+    </li>
+    <li><a href="#objective">Objective</a></li>
+    <li><a href="#business-rules">Business Rules</a></li>
+    <li><a href="#technical-requirements">Technical Requirements</a></li>
+    <li><a href="#getting-started">Getting Started</a></li>
+    <li><a href="#assumptions">Assumptions</a></li>
+    <li><a href="#expected-outcomes">Expected Outcomes</a></li>
+     <li><a href="#extra-points">Extra points</a></li>
+  </ol>
+</details>
 
-* Top product per day
-* Top product for last 3 days - **Assume today's date is 21/07/2021**
+## 📖 Brief
 
-Write a program which finds the top product based on the following rules:
+Bunnings is launching a brand-new page on their website to allow customers to view
 
-* When accounting for sales of a product on a day or for a given period, we
-  only tally a single sale per order.
-  > For example, If a customer buys some hammers in a single orders as
-  > represented by the json below when consolidating the sales you
-  > consider this as a single sales.
-  ```json
-  [
-    {
-      "orderId": "O10",
-      "customerId": "C1",
-      "entries": [{ "id": "P1", "quantity": 2 }],
-      "date": "19/07/2021",
-      "status": "completed"
-    }
-  ]
-  ```
-* Multiple orders of the same product by the same customer on the same day are
-  **not** considered.
-  > For example, If a customer buys some hammers in 2 separate orders on the
-  > same day as represented by the json below when consolidating the sales you
-  > consider this as a single sales.
-  ```json
-  [
-    {
-      "orderId": "O10",
-      "customerId": "C1",
-      "entries": [{ "id": "P1", "quantity": 2 }],
-      "date": "19/07/2021",
-      "status": "completed"
-    }, {
-      "orderId": "O11",
-      "customerId": "C1",
-      "entries": [{ "id": "P1", "quantity": 3 }],
-      "date": "19/07/2021",
-      "status": "completed"
-    }
-  ]
-  ```
-* For orders that are cancelled do not account the original completed order
-  towards the calculations.
-  > For example, If a customer has placed an order on 19th and then cancelled
-  > the order on the next day then we do not account order O10 towards the 
-  > sales.
-  ```json
-  [
-    {
-      "orderId": "O10",
-      "customerId": "C1",
-      "entries": [...],
-      "date": "19/07/2021",
-      "status": "completed"
-    }, {
-      "orderId": "O11",
-      "date": "20/07/2021",
-      "status": "cancelled"
-    }
-  ]
-  ```
-* If multiple products have equal sales, select alphabetically first only.
-  > Example If a "Hammer" and "BBQ" had similar sales you choose "BBQ"
+- A history of the top sizzling hot product for each day
+- The top sizzling hot product over the past 3 days
 
-Sample Input Files
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-* Orders: [orders.json](inputs/orders.json)
-* Product Details: [products.json](inputs/products.json)
+## 🎯 Objective
 
-The expected output for the above input is as below:
+Your assignment is to implement a solution to calculate the sizzling hot products using the business rules defined below.
 
-```text
-19/07/2021: "Ezy Storage 37L Flexi Laundry Basket - White"
-20/07/2021: "Ezy Storage 37L Flexi Laundry Basket - White"
-21/07/2021: "Arlec 160W Crystalline Solar Foldable Charging Kit"
-Last 3 Days: "Ezy Storage 37L Flexi Laundry Basket - White"
-```
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-Consider other inputs and edge cases, not just the supplied input.
+## 🚦 Business Rules
 
-## Deliverables
+1. A product sale should only be counted once per order.
+   <br>
+   > For example if an order contains a purchase of five hammers it should be counted as a one sale
+   > towards the product sales total, not five.
+   ```json
+   [
+     {
+       "orderId": "O10",
+       "customerId": "C1",
+       "entries": [{ "id": "P1", "quantity": 2 }],
+       "date": "19/07/2021",
+       "status": "completed"
+     }
+   ]
+   ```
+2. Multiple orders of the same product by the same customer on the same day should be excluded from the product sales total.
+   <br>
 
-* Application should be able to accept above data as json files from input
-  folder 🗂️
-* We encourage you to provide a well unit-tested code 🧪
-* We encourage you to consider design patterns and S.O.L.I.D principles. 🧱
-  > We understand if you prefer functional programming over OOP. The above
-  > recommendation only applies for folks attempting the test in OOP paradigm.
-  > 🌱
-* We recommend not spending more than half-a-day ⌚
-* The code you produce can be in any language ⭐
-* The output of the efforts must be committed back into a Repo in Github, and
-  the URL shared back for review. The Github repo must be accessible ❗
-* Document instructions on how to install and run your solution in the README 📄
-* Be kind to yourself and enjoy the challenge 🔥😎
+   > For example if a customer purchased the same product twice in one day in two separate orders, it should be counted as a one sale towards the product total, not two.
+
+   ```json
+   [
+     {
+       "orderId": "O10",
+       "customerId": "C1",
+       "entries": [{ "id": "P1", "quantity": 2 }],
+       "date": "19/07/2021",
+       "status": "completed"
+     },
+     {
+       "orderId": "O11",
+       "customerId": "C1",
+       "entries": [{ "id": "P1", "quantity": 3 }],
+       "date": "19/07/2021",
+       "status": "completed"
+     }
+   ]
+   ```
+
+3. Cancelled orders should be credited against the product total.
+   <br>
+
+   > For example if a customer cancels an order today that was placed yesterday, that product sale should be removed from the product sales total for that day or period.
+
+   ```json
+   [
+     {
+       "orderId": "O10",
+       "customerId": "C1",
+       "entries": [...],
+       "date": "19/07/2021",
+       "status": "completed"
+     }, {
+       "orderId": "O11",
+       "date": "20/07/2021",
+       "status": "cancelled"
+     }
+   ]
+   ```
+
+4. In the case of product sales being equal for two or more products, sort the products alphabetically and select the first one in the list.
+   <br>
+   > For example If a "Hammer" and "BBQ" had similar sales you select "BBQ"
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## 🔧 Technical Requirements
+
+1. Use any runtime/language of your choosing
+2. Solution should be able to accept data as json files from input folder.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## ⚙️ Getting Started
+
+1. Fork the repository.
+2. Read the brief and make sure you understand the business rules.
+3. Use the sample files in the input folder for your calculations.
+4. Commit your solution back to any publicly accessible repo in Github and share the URL back for review.
+5. Document instructions on how to install and run your solution in the README.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## 🔨 Assumptions
+
+1. For calculations assume today's date is 21/07/2021.
+2. Document any additional assumptions your have made in your README.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## 🎓 Expected Outcomes
+
+Based on the inputs in this repo and using the business rules in the README the outcomes should be as follows:
+
+<table>
+  <tr>
+    <td nowrap><strong>Date or Period</strong></td>
+    <td nowrap><strong>Top Sizzling Hot Product</strong></td>
+  </tr>
+  <tr>
+    <td nowrap>19/07/2021</td>
+    <td>Ezy Storage 37L Flexi Laundry Basket - White</td>
+  </tr>
+ <tr>
+    <td nowrap>20/07/2021</td>
+    <td>Ezy Storage 37L Flexi Laundry Basket - White</td>
+  </tr>
+   <tr>
+    <td nowrap>21/07/2021</td>
+    <td>Arlec 160W Crystalline Solar Foldable Charging Kit</td>
+  </tr>
+    <tr>
+    <td nowrap>19/07/2021 - 21/07/2021 </td>
+    <td>Ezy Storage 37L Flexi Laundry Basket - White</td>
+  </tr>
+</table>
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## ✨ Extra points
+
+1. Providing well unit-tested code.
+2. Considering design patterns & S.O.L.I.D principles
+3. Considering other inputs and edge cases outside the supplied ones.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
