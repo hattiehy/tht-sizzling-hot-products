@@ -1,14 +1,5 @@
 # ThtSizzlingHotProduct
 
-## 📋 Business Rules Implementation
-
-The application strictly adheres to the following business requirements:
-
-1. **Rule 1: Net Sales Calculation** - Cancelled orders are deducted from the product sales total.
-2. **Rule 2: Daily Customer Limit** - Multiple purchases of the same product by the same customer on the same day are counted as a single sale towards the product total.
-3. **Rule 3: Date Range Support** - Capability to calculate the top product for a specific day and over a rolling 3-day period.
-4. **Rule 4: Tie-breaking** - If multiple products have the same top score, the product with the name that appears first alphabetically is selected.
-
 ## 💡 Technical Assumptions
 
 To ensure data consistency and system reliability, the following technical assumptions were made:
@@ -20,6 +11,16 @@ To ensure data consistency and system reliability, the following technical assum
   - **Cancellation Level**: Cancellation is assumed to occur strictly at the **Order level**. The business logic does not support partial cancellations of individual products within an order; an order is either fully valid or fully voided.
 - **Retroactive Balancing**: The system assumes that a `Cancelled` status on any date should invalidate the corresponding `Completed` order, regardless of whether they occurred on the same day.
 - **Data Integrity**: If a sale is associated with a Product ID that is missing from the products repository, the system defaults to "No Product Found" to ensure graceful degradation.
+
+## 🛠 Future Improvements & Roadmap
+
+While the current solution focuses on the core business logic and order processing, the following enhancements are planned for a production-ready version:
+
+- **Input Data Validation**:
+  - Due to the project's current scope and time constraints, explicit input validation for the JSON data source was not implemented.
+  - **Proposed Solution**: Integrate **FluentValidation** to enforce strict schemas for the `Order` and `Product` models (e.g., `Entries` are not null for completed orders).
+- **Logging and Monitoring**:
+  - Implement structured logging to track data processing errors or missing product references during runtime.
 
 ## 🚀 Installation & Instructions
 
