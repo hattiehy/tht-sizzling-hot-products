@@ -1,170 +1,57 @@
-<div id="top"></div>
+# ThtSizzlingHotProduct
 
-<h1 align="center">
-  <br> 
-  <img src="readme/logo.png" width="800" alt="Bunnings Take Home Assignment" />
-  <br>  <br>
-  Sizzling Hot Products
-  <br>
-</h1>
+## 💡 Technical Assumptions
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#brief">Brief</a>
-    </li>
-    <li><a href="#objective">Objective</a></li>
-    <li><a href="#business-rules">Business Rules</a></li>
-    <li><a href="#technical-requirements">Technical Requirements</a></li>
-    <li><a href="#getting-started">Getting Started</a></li>
-    <li><a href="#assumptions">Assumptions</a></li>
-    <li><a href="#expected-outcomes">Expected Outcomes</a></li>
-     <li><a href="#extra-points">Extra points</a></li>
-  </ol>
-</details>
+To ensure data consistency and system reliability, the following technical assumptions were made:
 
-## 📖 Brief
+- **Date Normalization**: All timestamps are normalized to `.Date` (00:00:00) when calculating Rule 2. This prevents different purchase times on the same day from being counted as multiple sales.
+- **Order Status and Entry Consistency**:
+  - **Completed Orders**: It is assumed that every order with a `Completed` status contains a non-null and non-empty `Entries` list. These entries represent the actual items sold.
+  - **Cancelled Orders**: It is assumed that `Cancelled` orders share the same `OrderId` as the original `Completed` order but contain an empty `Entries` list.
+  - **Cancellation Level**: Cancellation is assumed to occur strictly at the **Order level**. The business logic does not support partial cancellations of individual products within an order; an order is either fully valid or fully voided.
+- **Retroactive Balancing**: The system assumes that a `Cancelled` status on any date should invalidate the corresponding `Completed` order, regardless of whether they occurred on the same day.
+- **Data Integrity**: If a sale is associated with a Product ID that is missing from the products repository, the system defaults to "No Product Found" to ensure graceful degradation.
 
-Bunnings is launching a brand-new page on their website to allow customers to view
+## 🛠 Future Improvements & Roadmap
 
-- A history of the top sizzling hot product for each day
-- The top sizzling hot product over the past 3 days
+While the current solution focuses on the core business logic and order processing, the following enhancements are planned for a production-ready version:
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+- **Input Data Validation**:
+  - Due to the project's current scope and time constraints, explicit input validation for the JSON data source was not implemented.
+  - **Proposed Solution**: Integrate **FluentValidation** to enforce strict schemas for the `Order` and `Product` models (e.g., `Entries` are not null for completed orders).
+- **Logging and Monitoring**:
+  - Implement structured logging to track data processing errors or missing product references during runtime.
 
-## 🎯 Objective
+## 🚀 Installation & Instructions
 
-Your assignment is to implement a solution to calculate the sizzling hot products using the business rules defined below.
+### Prerequisites
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+- [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) or higher.
+- Visual Studio Code or Visual Studio 2022.
 
-## 🚦 Business Rules
+### Setup and Execution
 
-1. A product sale should only be counted once per order.
-   <br>
-   > For example if an order contains a purchase of five hammers it should be counted as a one sale
-   > towards the product sales total, not five.
-   ```json
-   [
-     {
-       "orderId": "O10",
-       "customerId": "C1",
-       "entries": [{ "id": "P1", "quantity": 2 }],
-       "date": "19/07/2021",
-       "status": "completed"
-     }
-   ]
-   ```
-2. Multiple orders of the same product by the same customer on the same day should be excluded from the product sales total.
-   <br>
+1. **Clone the Repository**
 
-   > For example if a customer purchased the same product twice in one day in two separate orders, it should be counted as a one sale towards the product total, not two.
-
-   ```json
-   [
-     {
-       "orderId": "O10",
-       "customerId": "C1",
-       "entries": [{ "id": "P1", "quantity": 2 }],
-       "date": "19/07/2021",
-       "status": "completed"
-     },
-     {
-       "orderId": "O11",
-       "customerId": "C1",
-       "entries": [{ "id": "P1", "quantity": 3 }],
-       "date": "19/07/2021",
-       "status": "completed"
-     }
-   ]
+   ```bash
+   git clone <your-repository-url>
+   cd ThtSizzlingHotProduct
    ```
 
-3. Cancelled orders should be credited against the product total.
-   <br>
+2. **Restore Dependencies**
 
-   > For example if a customer cancels an order today that was placed yesterday, that product sale should be removed from the product sales total for that day or period.
-
-   ```json
-   [
-     {
-       "orderId": "O10",
-       "customerId": "C1",
-       "entries": [...],
-       "date": "19/07/2021",
-       "status": "completed"
-     }, {
-       "orderId": "O11",
-       "date": "20/07/2021",
-       "status": "cancelled"
-     }
-   ]
+   ```bash
+   dotnet restore
+   dotnet build
    ```
 
-4. In the case of product sales being equal for two or more products, sort the products alphabetically and select the first one in the list.
-   <br>
-   > For example If a "Hammer" and "BBQ" had similar sales you select "BBQ"
+3. **Run the Application**
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+   ```bash
+   dotnet run
+   ```
 
-## 🔧 Technical Requirements
-
-1. Use any runtime/language of your choosing
-2. Solution should be able to accept data as json files from input folder.
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-## ⚙️ Getting Started
-
-1. Fork the repository.
-2. Read the brief and make sure you understand the business rules.
-3. Use the sample files in the input folder for your calculations.
-4. Commit your solution back to any publicly accessible repo in Github and share the URL back for review.
-5. Document instructions on how to install and run your solution in the README.
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-## 🔨 Assumptions
-
-1. For calculations assume today's date is 21/07/2021.
-2. Document any additional assumptions your have made in your README.
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-## 🎓 Expected Outcomes
-
-Based on the inputs in this repo and using the business rules in the README the outcomes should be as follows:
-
-<table>
-  <tr>
-    <td nowrap><strong>Date or Period</strong></td>
-    <td nowrap><strong>Top Sizzling Hot Product</strong></td>
-  </tr>
-  <tr>
-    <td nowrap>19/07/2021</td>
-    <td>Ezy Storage 37L Flexi Laundry Basket - White</td>
-  </tr>
- <tr>
-    <td nowrap>20/07/2021</td>
-    <td>Ezy Storage 37L Flexi Laundry Basket - White</td>
-  </tr>
-   <tr>
-    <td nowrap>21/07/2021</td>
-    <td>Arlec 160W Crystalline Solar Foldable Charging Kit</td>
-  </tr>
-    <tr>
-    <td nowrap>19/07/2021 - 21/07/2021 </td>
-    <td>Ezy Storage 37L Flexi Laundry Basket - White</td>
-  </tr>
-</table>
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-## ✨ Extra points
-
-1. Providing well unit-tested code.
-2. Considering design patterns & S.O.L.I.D principles
-3. Considering other inputs and edge cases outside the supplied ones.
-
-<p align="right">(<a href="#top">back to top</a>)</p>
+4. **Run Unit Tests**
+   ```bash
+   dotnet test
+   ```
